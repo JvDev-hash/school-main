@@ -76,7 +76,7 @@
 					<password>root</password>
 					<baselineOnMigrate>true</baselineOnMigrate>
 					<schemas>public</schemas>-->
-					<url>jdbc:h2:file:./target/foobar</url>
+					<url>jdbc:h2:mem:school-db</url>
                     <user>sa</user>
 					<locations>
 						<location>
