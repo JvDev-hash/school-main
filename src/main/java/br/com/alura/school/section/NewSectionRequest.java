@@ -7,13 +7,13 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 public class NewSectionRequest {
-    @Unique(entity = Section.class, field = "code")
+    //@Unique(entity = Section.class, field = "code")
     @Size(max=30)
     @NotBlank
     @JsonProperty
     private final String code;
 
-    @Unique(entity = Section.class, field = "title")
+    //@Unique(entity = Section.class, field = "title")
     @Size(min=5)
     @NotBlank
     @JsonProperty

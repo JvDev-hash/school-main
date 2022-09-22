@@ -6,6 +6,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -22,7 +23,13 @@ class CourseController {
 
     @GetMapping("/courses")
     ResponseEntity<List<CourseResponse>> allCourses() {
-        return ResponseEntity.ok().build();
+        List<Course> allCoursesList = courseRepository.findAll();
+        List<CourseResponse> allCoursesReturn = new ArrayList<>();
+
+        for(Course course : allCoursesList){
+            allCoursesReturn.add(new CourseResponse(course));
+        }
+        return ResponseEntity.ok(allCoursesReturn);
     }
 
     @GetMapping("/courses/{code}")
