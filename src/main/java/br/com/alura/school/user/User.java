@@ -9,7 +9,7 @@ import static br.com.alura.school.user.UserRole.STUDENT;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Entity
-class User {
+public class User {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -36,12 +36,16 @@ class User {
         this.email = email;
     }
 
-    String getUsername() {
+    public String getUsername() {
         return username;
     }
 
-    String getEmail() {
+    public String getEmail() {
         return email;
+    }
+
+    public String getUserRole(){
+        return role.name();
     }
 
 }
