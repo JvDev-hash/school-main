@@ -4,10 +4,15 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import br.com.alura.school.section.Section;
+
 import static javax.persistence.GenerationType.IDENTITY;
+
+import java.util.List;
 
 @Entity
 public class Course {
@@ -28,6 +33,9 @@ public class Course {
 
     private String description;
 
+    @ManyToMany(mappedBy = "courses")
+    List<Section> sections;
+
     @Deprecated
     protected Course() { }
 
@@ -37,7 +45,7 @@ public class Course {
         this.description = description;
     }
 
-    String getCode() {
+    public String getCode() {
         return code;
     }
 
@@ -47,6 +55,10 @@ public class Course {
 
     String getDescription() {
         return description;
+    }
+
+    public List<Section> getSections() {
+        return sections;
     }
 
 }

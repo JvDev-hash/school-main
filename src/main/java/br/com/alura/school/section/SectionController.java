@@ -19,7 +19,7 @@ import  br.com.alura.school.course.*;
 
 @RestController
 public class SectionController {
-    
+
     private final SectionRepository sectionRepository;
 
     private final UserRepository userRepository;
@@ -64,19 +64,29 @@ public class SectionController {
 
     @PostMapping("/courses/{code}/sections")
     ResponseEntity<Void> newCourse(@PathVariable String code, @RequestBody @Valid NewSectionRequest newSectionRequest) {
-        Section tempSection = newSectionRequest.toEntity(code);
+        List<Course> actualCourse = courseRepository.findCoursesByCode(code).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Courses not found"));
+        Section tempSection = newSectionRequest.toEntity(actualCourse);
+        boolean testSection = false;
 
-        Section testSection = sectionRepository.findByCourseCodeAndCode(code, tempSection.getCode());
+        if(actualCourse.isEmpty()){
+            throw new ResponseStatusException(NOT_FOUND, format("Section with code %s not found", code));
+         } else {
+        for(Section section: actualCourse.get(0).getSections()){
+            if(section.getCode().equals(tempSection.getCode())){
+                testSection = true;
+                break;
+            }
+        }
+    }
 
-        Course tempCourse = courseRepository.findByCode(tempSection.getCourseCode()).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("Course with code %s not found", tempSection.getCourseCode())));
         User tempUser = userRepository.findByUsername(tempSection.getAuthorUsername()).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("User with username %s not found", tempSection.getAuthorUsername())));
 
         if(!tempUser.getUserRole().equals("INSTRUCTOR")){
             throw new ResponseStatusException(UNAUTHORIZED, format("User with code %s is not a Instructor", tempUser.getUsername()));
-        } else if(testSection != null) {
+        } else if(testSection == true) {
             throw new ResponseStatusException(CONFLICT, "Duplicated section Code");
         } else {
-            sectionRepository.save(newSectionRequest.toEntity(code));
+            sectionRepository.save(newSectionRequest.toEntity(actualCourse));
             URI location = URI.create(format("/sections/%s", newSectionRequest.getCode()));
             return ResponseEntity.created(location).build();
         }

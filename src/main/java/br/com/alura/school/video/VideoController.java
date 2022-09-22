@@ -4,8 +4,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import br.com.alura.school.course.Course;
+import br.com.alura.school.course.CourseRepository;
 import br.com.alura.school.section.Section;
-import br.com.alura.school.section.SectionRepository;
 
 import javax.validation.Valid;
 import java.net.URI;
@@ -18,11 +19,12 @@ public class VideoController {
 
     private final VideoRepository videoRepository;
 
-    private final SectionRepository sectionRepository;
 
-    VideoController(VideoRepository videoRepository, SectionRepository sectionRepository){
+    private final CourseRepository courseRepository;
+
+    VideoController(VideoRepository videoRepository, CourseRepository courseRepository){
         this.videoRepository = videoRepository;
-        this.sectionRepository = sectionRepository;
+        this.courseRepository = courseRepository;
     }
 
     @GetMapping("/videos/{title}")
@@ -33,7 +35,14 @@ public class VideoController {
 
     @PostMapping("/courses/{courseCode}/sections/{sectionCode}")
     ResponseEntity<Void> newVideo(@PathVariable String sectionCode, @PathVariable String courseCode, @RequestBody @Valid NewVideoRequest newVideoRequest) {
-        Section section = sectionRepository.findByCourseCodeAndCode(courseCode, sectionCode);
+        Course actualCourse = courseRepository.findByCode(courseCode).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Course not Found"));
+        Section section = null;
+
+        for(Section tempSection : actualCourse.getSections()){
+            if(tempSection.getCode().equals(sectionCode)){
+                section = tempSection;
+            }
+        }
 
         videoRepository.save(newVideoRequest.toEntity(section));
         URI location = URI.create(format("/videos/%s", newVideoRequest.getTitle()));

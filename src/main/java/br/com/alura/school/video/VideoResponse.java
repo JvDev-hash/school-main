@@ -12,6 +12,5 @@ public class VideoResponse {
     VideoResponse(Video video){
         this.video = video.getVideo();
         this.title = video.getTitle();
-
     }
 }

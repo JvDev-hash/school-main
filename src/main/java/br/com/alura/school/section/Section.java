@@ -4,14 +4,19 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import br.com.alura.school.course.Course;
 import br.com.alura.school.video.Video;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,9 +40,12 @@ public class Section {
     @Column(nullable = false)
     private String authorUsername;
 
-    @NotBlank
-    @Column(nullable = false)
-    private String courseCode;
+    @ManyToMany
+    @JoinTable(
+    name = "course_section",
+    joinColumns = @JoinColumn(name = "section_id"),
+    inverseJoinColumns = @JoinColumn(name = "course_id"))
+    List<Course> courses;
 
     @OneToMany(mappedBy = "section")
     private List<Video> videos;
@@ -45,14 +53,14 @@ public class Section {
     @Deprecated
     protected Section() { }
 
-    Section(String code, String title, String authorUsername, String courseCode) {
+    Section(String code, String title, String authorUsername, List<Course> courses) {
         this.code = code;
         this.title = title;
         this.authorUsername = authorUsername;
-        this.courseCode = courseCode;
+        this.courses = courses;
     }
 
-    String getCode() {
+    public String getCode() {
         return code;
     }
 
@@ -64,12 +72,22 @@ public class Section {
         return authorUsername;
     }
 
-    String getCourseCode(){
-        return courseCode;
+    List<Course> getCourses(){
+        return courses;
     }
 
     List<Video> getVideos(){
         return videos;
+    }
+
+    List<String> getCoursesCodesList(){
+        List<String> codesList = new ArrayList<>();
+
+        for(Course course : courses){
+            codesList.add(course.getCode());
+        }
+
+        return codesList;
     }
 
 }

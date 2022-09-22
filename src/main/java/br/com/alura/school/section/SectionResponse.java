@@ -17,7 +17,7 @@ public class SectionResponse {
     private final String authorUsername;
 
     @JsonProperty
-    private final String courseCode;
+    private final List<String> courseCode;
 
     @JsonProperty
     private final List<Video> videoList;
@@ -26,7 +26,7 @@ public class SectionResponse {
         this.code = section.getCode();
         this.title = section.getTitle();
         this.authorUsername = section.getAuthorUsername();
-        this.courseCode = section.getCourseCode();
+        this.courseCode = section.getCoursesCodesList();
         this.videoList = section.getVideos();
 
     }
