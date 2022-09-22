@@ -4,13 +4,18 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import br.com.alura.school.video.Video;
+
 import static javax.persistence.GenerationType.IDENTITY;
 
+import java.util.List;
+
 @Entity
-class Section {
+public class Section {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
@@ -33,6 +38,9 @@ class Section {
     @NotBlank
     @Column(nullable = false)
     private String courseCode;
+
+    @OneToMany(mappedBy = "section")
+    private List<Video> videos;
 
     @Deprecated
     protected Section() { }
@@ -58,6 +66,10 @@ class Section {
 
     String getCourseCode(){
         return courseCode;
+    }
+
+    List<Video> getVideos(){
+        return videos;
     }
 
 }

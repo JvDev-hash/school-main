@@ -1,0 +1,6 @@
+CREATE TABLE Video (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    video VARCHAR(255) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    section_id BIGINT NOT NULL
+);
