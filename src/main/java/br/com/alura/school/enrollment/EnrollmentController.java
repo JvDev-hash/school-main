@@ -15,14 +15,11 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import br.com.alura.school.course.Course;
 import br.com.alura.school.course.CourseRepository;
-import br.com.alura.school.section.SectionRepository;
 import br.com.alura.school.user.User;
 import br.com.alura.school.user.UserRepository;
 
 @RestController
 public class EnrollmentController {
-
-    private final SectionRepository sectionRepository;
 
     private final CourseRepository courseRepository;
 
@@ -30,8 +27,7 @@ public class EnrollmentController {
 
     private final UserRepository userRepository;
 
-    EnrollmentController(SectionRepository sectionRepository, CourseRepository courseRepository, EnrollmentRepository enrollmentRepository, UserRepository userRepository){
-        this.sectionRepository = sectionRepository;
+    EnrollmentController(CourseRepository courseRepository, EnrollmentRepository enrollmentRepository, UserRepository userRepository){
         this.courseRepository = courseRepository;
         this.enrollmentRepository = enrollmentRepository;
         this.userRepository = userRepository;
