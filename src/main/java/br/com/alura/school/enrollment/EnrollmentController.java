@@ -16,6 +16,8 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import br.com.alura.school.course.Course;
 import br.com.alura.school.course.CourseRepository;
 import br.com.alura.school.section.SectionRepository;
+import br.com.alura.school.user.User;
+import br.com.alura.school.user.UserRepository;
 
 @RestController
 public class EnrollmentController {
@@ -26,15 +28,19 @@ public class EnrollmentController {
 
     private final EnrollmentRepository enrollmentRepository;
 
-    EnrollmentController(SectionRepository sectionRepository, CourseRepository courseRepository, EnrollmentRepository enrollmentRepository){
+    private final UserRepository userRepository;
+
+    EnrollmentController(SectionRepository sectionRepository, CourseRepository courseRepository, EnrollmentRepository enrollmentRepository, UserRepository userRepository){
         this.sectionRepository = sectionRepository;
         this.courseRepository = courseRepository;
         this.enrollmentRepository = enrollmentRepository;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/courses/{courseCode}/enroll")
     ResponseEntity<Void> newEnrollment(@PathVariable String courseCode, @RequestBody @Valid NewEnrollmentRequest newEnrollmentRequest) {
         Course actualCourse = courseRepository.findByCode(courseCode).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Course not Found"));
+        User actualUser = userRepository.findByUsername(newEnrollmentRequest.getStudentUsername()).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "User not Found"));
         List<Course> finalList = new ArrayList<>();
 
         if(actualCourse != null){
