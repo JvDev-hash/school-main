@@ -65,4 +65,10 @@ public class Course {
         return sections;
     }
 
+    public List<Enrollment> getEnrollments() {
+        return enrollments;
+    }
+
+    
+
 }

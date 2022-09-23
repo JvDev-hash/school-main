@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.CONFLICT;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 import br.com.alura.school.course.Course;
 import br.com.alura.school.course.CourseRepository;
@@ -38,6 +38,12 @@ public class EnrollmentController {
         List<Course> finalList = new ArrayList<>();
 
         if(actualCourse != null){
+            for(Enrollment enroll : actualCourse.getEnrollments()){
+                if(enroll.getUsername().equals(newEnrollmentRequest.getStudentUsername())){
+                    throw new ResponseStatusException(BAD_REQUEST, "User already enrolled on this course");
+                }
+            }
+
             finalList.add(actualCourse);
         }
 

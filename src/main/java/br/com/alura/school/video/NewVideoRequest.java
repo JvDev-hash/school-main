@@ -13,6 +13,7 @@ public class NewVideoRequest {
     @JsonProperty
     private final String video;
 
+    @Unique(entity = Video.class, field = "title")
     @NotBlank
     @JsonProperty
     private final String title;
