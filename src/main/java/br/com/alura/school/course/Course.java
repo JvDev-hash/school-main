@@ -8,6 +8,7 @@ import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import br.com.alura.school.enrollment.Enrollment;
 import br.com.alura.school.section.Section;
 
 import static javax.persistence.GenerationType.IDENTITY;
@@ -35,6 +36,9 @@ public class Course {
 
     @ManyToMany(mappedBy = "courses")
     List<Section> sections;
+
+    @ManyToMany(mappedBy = "coursesEnrolled")
+    List<Enrollment> enrollments;
 
     @Deprecated
     protected Course() { }

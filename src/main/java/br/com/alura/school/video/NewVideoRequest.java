@@ -8,29 +8,29 @@ import br.com.alura.school.section.Section;
 import br.com.alura.school.support.validation.Unique;
 
 public class NewVideoRequest {
-        @NotBlank
-        @JsonProperty
-        private final String video;
 
-        @Unique(entity = Video.class, field = "title")
-        @NotBlank
-        @JsonProperty
-        private final String title;
+    @NotBlank
+    @JsonProperty
+    private final String video;
 
-        public NewVideoRequest(String video, String title) {
-            this.video = video;
-            this.title = title;
-        }
+    @NotBlank
+    @JsonProperty
+    private final String title;
 
-        public String getVideo() {
-            return video;
-        }
+    public NewVideoRequest(String video, String title) {
+        this.video = video;
+        this.title = title;
+    }
 
-        public String getTitle() {
-            return title;
-        }
+    public String getVideo() {
+        return video;
+    }
 
-        Video toEntity(Section section) {
-            return new Video(video, section, title);
-        }
+    public String getTitle() {
+        return title;
+    }
+
+    Video toEntity(Section section) {
+        return new Video(video, section, title);
+    }
 }
