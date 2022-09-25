@@ -14,12 +14,17 @@ public class SectionByVideosReport {
     private final String authorName;
 
     @JsonProperty
-    private final int totalVideos;
+    private final Integer totalVideos;
 
-    SectionByVideosReport(String courseName, String sectionTitle, String authorName, int totalVideos){
+    SectionByVideosReport(String courseName, String sectionTitle, String authorName, Integer totalVideos){
         this.authorName = authorName;
         this.courseName = courseName;
         this.sectionTitle = sectionTitle;
         this.totalVideos = totalVideos;
     }
+
+    public Integer getTotalVideos() {
+        return totalVideos;
+    }
+
 }

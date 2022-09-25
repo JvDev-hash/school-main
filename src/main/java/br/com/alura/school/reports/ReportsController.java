@@ -9,6 +9,8 @@ import br.com.alura.school.course.CourseRepository;
 import br.com.alura.school.section.Section;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -49,6 +51,13 @@ public class ReportsController {
 
             throw new ResponseStatusException(NOT_FOUND, "Does not have courses yet");
         }
+
+        Collections.sort(finalReport, Collections.reverseOrder(new Comparator<SectionByVideosReport>() {
+            @Override
+            public int compare(SectionByVideosReport o1, SectionByVideosReport o2) {
+                return o1.getTotalVideos().compareTo(o2.getTotalVideos());
+            }
+        }));
 
         return ResponseEntity.ok(finalReport);
     }
