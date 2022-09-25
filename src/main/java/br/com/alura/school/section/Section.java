@@ -2,6 +2,7 @@ package br.com.alura.school.section;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
@@ -47,7 +48,7 @@ public class Section {
     inverseJoinColumns = @JoinColumn(name = "course_id"))
     List<Course> courses;
 
-    @OneToMany(mappedBy = "section")
+    @OneToMany(mappedBy = "section", fetch = FetchType.LAZY)
     private List<Video> videos;
 
     @Deprecated
@@ -64,11 +65,11 @@ public class Section {
         return code;
     }
 
-    String getTitle() {
+    public String getTitle() {
         return title;
     }
 
-    String getAuthorUsername(){
+    public String getAuthorUsername(){
         return authorUsername;
     }
 
@@ -76,7 +77,7 @@ public class Section {
         return courses;
     }
 
-    List<Video> getVideos(){
+    public List<Video> getVideos(){
         return videos;
     }
 
