@@ -54,4 +54,14 @@ public class Video {
         return title;
     }
 
+    public void setVideo(String video) {
+        this.video = video;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    
+
 }

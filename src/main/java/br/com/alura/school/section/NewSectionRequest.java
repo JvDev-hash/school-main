@@ -33,7 +33,15 @@ public class NewSectionRequest {
         return code;
     }
 
+    public String getAuthorUsername() {
+        return authorUsername;
+    }
+
     Section toEntity(List<Course> courseCode) {
         return new Section(code, title, authorUsername, courseCode);
+    }
+
+    public String getTitle() {
+        return title;
     }
 }

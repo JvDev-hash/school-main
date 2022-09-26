@@ -63,7 +63,7 @@ public class SectionController {
     }
 
     @PostMapping("/courses/{code}/sections")
-    ResponseEntity<Void> newCourse(@PathVariable String code, @RequestBody @Valid NewSectionRequest newSectionRequest) {
+    ResponseEntity<Void> newSection(@PathVariable String code, @RequestBody @Valid NewSectionRequest newSectionRequest) {
         Course actualCourse = courseRepository.findByCode(code).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Courses not found"));
         List<Course> tempCourseList = new ArrayList<>();
         tempCourseList.add(actualCourse);
@@ -82,7 +82,8 @@ public class SectionController {
         }
     }
 
-        User tempUser = userRepository.findByUsername(tempSection.getAuthorUsername()).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("User with username %s not found", tempSection.getAuthorUsername())));
+        User tempUser = userRepository.findByUsername(tempSection.getAuthorUsername())
+            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("User with username %s not found", tempSection.getAuthorUsername())));
 
         if(!tempUser.getUserRole().equals("INSTRUCTOR")){
             throw new ResponseStatusException(UNAUTHORIZED, format("User with code %s is not a Instructor", tempUser.getUsername()));
@@ -110,5 +111,35 @@ public class SectionController {
         }
 
         return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/courses/{code}/sections/{sectionCode}")
+    ResponseEntity<Void> updateSection(@PathVariable String code, @PathVariable String sectionCode, @RequestBody @Valid NewSectionRequest newSectionRequest) {
+        Course actualCourse = courseRepository.findByCode(code).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Courses not found"));
+        Section targetSection = null;
+
+        if(!actualCourse.getSections().isEmpty()){
+            for(Section section: actualCourse.getSections()){
+                if(section.getCode().equals(sectionCode)){
+                    targetSection = section;
+                    targetSection.setAuthorUsername(newSectionRequest.getAuthorUsername());
+                    targetSection.setCode(newSectionRequest.getCode());
+                    targetSection.setTitle(newSectionRequest.getTitle());
+                }
+            }
+        } else {
+            throw new ResponseStatusException(NOT_FOUND, format("Section with code %s not found", sectionCode));
+        }
+
+        User tempUser = userRepository.findByUsername(newSectionRequest.getAuthorUsername())
+            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, format("User with username %s not found", newSectionRequest.getAuthorUsername())));
+
+        if(!tempUser.getUserRole().equals("INSTRUCTOR")){
+            throw new ResponseStatusException(UNAUTHORIZED, format("User with code %s is not a Instructor", tempUser.getUsername()));
+        } else{
+            sectionRepository.save(targetSection);
+            URI location = URI.create(format("/sections/%s", newSectionRequest.getCode()));
+            return ResponseEntity.created(location).build();
+        }
     }
 }

@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import javax.validation.constraints.NotBlank;
 
 import br.com.alura.school.section.Section;
-import br.com.alura.school.support.validation.Unique;
 
 public class NewVideoRequest {
 
@@ -13,7 +12,6 @@ public class NewVideoRequest {
     @JsonProperty
     private final String video;
 
-    @Unique(entity = Video.class, field = "title")
     @NotBlank
     @JsonProperty
     private final String title;

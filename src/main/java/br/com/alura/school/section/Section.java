@@ -92,4 +92,16 @@ public class Section {
         return codesList;
     }
 
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setAuthorUsername(String authorUsername) {
+        this.authorUsername = authorUsername;
+    }
+
 }
