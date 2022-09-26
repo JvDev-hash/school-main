@@ -8,6 +8,8 @@ import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import br.com.alura.school.enrollment.Enrollment;
 import br.com.alura.school.section.Section;
 
@@ -37,6 +39,7 @@ public class Course {
     @ManyToMany(mappedBy = "courses")
     List<Section> sections;
 
+    @JsonManagedReference
     @ManyToMany(mappedBy = "coursesEnrolled")
     List<Enrollment> enrollments;
 

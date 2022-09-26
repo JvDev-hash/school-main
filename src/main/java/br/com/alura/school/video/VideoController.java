@@ -13,6 +13,7 @@ import java.net.URI;
 
 import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
 @RestController
 public class VideoController {
@@ -38,14 +39,29 @@ public class VideoController {
         Course actualCourse = courseRepository.findByCode(courseCode).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Course not Found"));
         Section section = null;
 
-        for(Section tempSection : actualCourse.getSections()){
-            if(tempSection.getCode().equals(sectionCode)){
-                section = tempSection;
+        if(!actualCourse.getSections().isEmpty()){
+            for(Section tempSection : actualCourse.getSections()){
+                if(tempSection.getCode().equals(sectionCode)){
+                    section = tempSection;
+                } else {
+                    throw new ResponseStatusException(BAD_REQUEST, "Section not Found");
+                }
             }
+
+        } else {
+            throw new ResponseStatusException(BAD_REQUEST, "Course does not have sections yet");
         }
 
         videoRepository.save(newVideoRequest.toEntity(section));
         URI location = URI.create(format("/videos/%s", newVideoRequest.getTitle()));
         return ResponseEntity.created(location).build();
+    }
+
+    @DeleteMapping("/courses/{courseCode}/sections/{sectionCode}/{videoTitle}")
+    ResponseEntity<Void> deleteVideo(@PathVariable String sectionCode, @PathVariable String courseCode, @PathVariable String videoTitle){
+        Video targetVideo = videoRepository.findByTitle(videoTitle).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Video not Found"));
+
+        videoRepository.delete(targetVideo);
+        return ResponseEntity.ok().build();
     }
 }

@@ -64,14 +64,17 @@ public class SectionController {
 
     @PostMapping("/courses/{code}/sections")
     ResponseEntity<Void> newCourse(@PathVariable String code, @RequestBody @Valid NewSectionRequest newSectionRequest) {
-        List<Course> actualCourse = courseRepository.findCoursesByCode(code).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Courses not found"));
-        Section tempSection = newSectionRequest.toEntity(actualCourse);
+        Course actualCourse = courseRepository.findByCode(code).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Courses not found"));
+        List<Course> tempCourseList = new ArrayList<>();
+        tempCourseList.add(actualCourse);
+
+        Section tempSection = newSectionRequest.toEntity(tempCourseList);
         boolean testSection = false;
 
-        if(actualCourse.isEmpty()){
+        if(tempCourseList.isEmpty()){
             throw new ResponseStatusException(NOT_FOUND, format("Section with code %s not found", code));
          } else {
-        for(Section section: actualCourse.get(0).getSections()){
+        for(Section section: actualCourse.getSections()){
             if(section.getCode().equals(tempSection.getCode())){
                 testSection = true;
                 break;
@@ -86,9 +89,26 @@ public class SectionController {
         } else if(testSection == true) {
             throw new ResponseStatusException(CONFLICT, "Duplicated section Code");
         } else {
-            sectionRepository.save(newSectionRequest.toEntity(actualCourse));
+            sectionRepository.save(newSectionRequest.toEntity(tempCourseList));
             URI location = URI.create(format("/sections/%s", newSectionRequest.getCode()));
             return ResponseEntity.created(location).build();
         }
+    }
+
+    @DeleteMapping("/courses/{code}/sections/{sectionCode}")
+    ResponseEntity<Void> deleteSection(@PathVariable String code, @PathVariable String sectionCode){
+        Course actualCourse = courseRepository.findByCode(code).orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Course not found"));
+
+        if(!actualCourse.getSections().isEmpty()){
+            for(Section section: actualCourse.getSections()){
+                if(section.getCode().equals(sectionCode)){
+                    sectionRepository.delete(section);
+                }
+            }
+        } else {
+            throw new ResponseStatusException(NOT_FOUND, format("Section with code %s not found", sectionCode));
+        }
+
+        return ResponseEntity.ok().build();
     }
 }

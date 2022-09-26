@@ -1,5 +1,6 @@
 package br.com.alura.school.section;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -48,7 +49,7 @@ public class Section {
     inverseJoinColumns = @JoinColumn(name = "course_id"))
     List<Course> courses;
 
-    @OneToMany(mappedBy = "section", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "section", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Video> videos;
 
     @Deprecated
