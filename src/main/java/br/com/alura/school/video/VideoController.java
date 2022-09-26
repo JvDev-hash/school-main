@@ -46,8 +46,6 @@ public class VideoController {
             for(Section tempSection : actualCourse.getSections()){
                 if(tempSection.getCode().equals(sectionCode)){
                     section = tempSection;
-                } else {
-                    throw new ResponseStatusException(BAD_REQUEST, "Section not Found");
                 }
             }
 

@@ -41,12 +41,12 @@ class EnrollmentControllerTest {
 
     @Test
     void should_add_new_enroll() throws Exception {
-        courseRepository.save(new Course("java-1", "Java OO", "Java and Object Orientation: Encapsulation, Inheritance and Polymorphism."));
+        courseRepository.save(new Course("java-9", "Java OO-new", "Java and Object Orientation: Encapsulation, Inheritance and Polymorphism."));
         userRepository.save(new User("victor", "victor@email.com"));
 
         NewEnrollmentRequest newEnroll = new NewEnrollmentRequest("victor");
 
-        mockMvc.perform(post("/courses/java-1/enroll")
+        mockMvc.perform(post("/courses/java-9/enroll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMapper.writeValueAsString(newEnroll)))
                 .andExpect(status().isCreated());
@@ -54,10 +54,10 @@ class EnrollmentControllerTest {
 
     @Test
     void should_not_allow_duplication_of_enroll() throws Exception {
-        courseRepository.save(new Course("spring-1", "Spring Basics", "Spring Core and Spring MVC."));
+        courseRepository.save(new Course("spring-7", "Spring Basics-new", "Spring Core and Spring MVC."));
         userRepository.save(new User("joao", "joao@email.com"));
 
-        Course actualCourse = courseRepository.findByCode("spring-1").orElseThrow();
+        Course actualCourse = courseRepository.findByCode("spring-7").orElseThrow();
         List<Course> finalList = new ArrayList<>();
         finalList.add(actualCourse);
         NewEnrollmentRequest newEnroll = new NewEnrollmentRequest("joao");
@@ -65,7 +65,7 @@ class EnrollmentControllerTest {
 
         NewEnrollmentRequest newEnrollTest = new NewEnrollmentRequest("joao");
 
-        mockMvc.perform(post("/courses/spring-1/enroll")
+        mockMvc.perform(post("/courses/spring-7/enroll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMapper.writeValueAsString(newEnrollTest)))
                 .andExpect(status().isBadRequest());
@@ -74,11 +74,11 @@ class EnrollmentControllerTest {
     @Test
     void should_not_allow_empty_username() throws Exception {
 
-        courseRepository.save(new Course("spring-2", "Spring Boot", "Spring Boot"));
+        courseRepository.save(new Course("spring-5", "Spring Boot-new", "Spring Boot"));
 
         NewEnrollmentRequest newEnroll = new NewEnrollmentRequest("");
 
-        mockMvc.perform(post("/courses/spring-2/enroll")
+        mockMvc.perform(post("/courses/spring-5/enroll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMapper.writeValueAsString(newEnroll)))
                 .andExpect(status().isBadRequest());
@@ -86,11 +86,11 @@ class EnrollmentControllerTest {
 
     @Test
     void should_not_allow_inexistent_username() throws Exception {
-        courseRepository.save(new Course("java-2", "Java Collections", "Java Collections: Lists, Sets, Maps and more."));
+        courseRepository.save(new Course("java-8", "Java Collections-new", "Java Collections: Lists, Sets, Maps and more."));
 
         NewEnrollmentRequest newEnroll = new NewEnrollmentRequest("juliana");
 
-        mockMvc.perform(post("/courses/java-2/enroll")
+        mockMvc.perform(post("/courses/java-8/enroll")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonMapper.writeValueAsString(newEnroll)))
                 .andExpect(status().isNotFound());

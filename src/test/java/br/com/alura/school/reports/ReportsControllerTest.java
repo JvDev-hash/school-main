@@ -43,8 +43,8 @@ public class ReportsControllerTest {
 
     @Test
     void should_return_no_content() throws Exception {
-        courseRepository.save(new Course("spring-1", "Spring Basics", "Spring Core and Spring MVC."));
-        courseRepository.save(new Course("spring-2", "Spring Boot", "Spring Boot"));
+        courseRepository.save(new Course("spring-10", "Spring Basics-novo", "Spring Core and Spring MVC."));
+        courseRepository.save(new Course("spring-11", "Spring Boot-att", "Spring Boot"));
 
         mockMvc.perform(get("/sectionByVideosReport")
             .accept(MediaType.APPLICATION_JSON))
